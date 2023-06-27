@@ -25,7 +25,7 @@ d3.json(weekAll).then(function (data) {
   // Create a map object.
   let myMap = L.map("map", {
       center: [35, -82.30695],
-      zoom: 5
+      zoom: 4
     });
 
 
@@ -81,10 +81,10 @@ d3.json(weekAll).then(function (data) {
     //depth of the earthquake by color
     let color = "";
     if (depth[i] < 30) {
-      color = "light green";
+      color = "green";
     }
     else if (depth[i] < 60) {
-      color = "green";
+      color = "#81FA86";
     }
     else if (depth[i] < 90) {
       color = "yellow";
@@ -100,7 +100,7 @@ d3.json(weekAll).then(function (data) {
       color: "black",
       fillColor: color,
       // Adjust the radius.
-      radius: Math.sqrt(mag[i]) * 2.5
+      radius: mag[i] * 3
       
     }).bindPopup(
       //create popup
@@ -111,7 +111,44 @@ d3.json(weekAll).then(function (data) {
   
   //console.log(coord)
   //console.log(depth)
-});
+
 //Create a legend that will provide context for your map data.
 
-//
+
+    // Set up the legend.
+    let legend = L.control({ position: "bottomright" });
+    legend.onAdd = function() {
+      let div = L.DomUtil.create("div", "info legend");
+      let limits = [-10, 30, 60, 90];
+      let colors = ["green", "#81FA86", "yellow", "red"];
+      // let labels = [];
+
+      for (let i = 0; i < limits.length; i++) {
+
+        div.innerHTML += "<i style ='background: " + colors[i] + "'></i> "
+
+        + limits[i] + (limits[i + 1] ? "&ndash;" + limits[ i + 1] + "<br>" : "+");
+      };
+  
+      // Add the minimum and maximum.
+      // let legendInfo = "<h1>Depth</h1>" +
+      //   "<div class=\"labels\">" +
+      //     "<div class=\"min\">" + limits[0] + "</div>" +
+      //     "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+      //   "</div>";
+  
+      // div.innerHTML = legendInfo;
+  
+      // limits.forEach(function(limit, index) {
+      //   labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+      // });
+  
+      // div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+
+      return div;
+    };
+  
+    // Adding the legend to the map
+    legend.addTo(myMap);
+
+  });
